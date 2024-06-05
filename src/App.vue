@@ -1,15 +1,18 @@
 <template>
   <v-app>
     <v-main>
-      <v-container>
-        <v-btn color="primary">Hello Vuetify</v-btn>
-      </v-container>
+      <CryptoTable />
     </v-main>
   </v-app>
 </template>
 
 <script>
+import CryptoTable from './components/CryptoTable.vue';
+
 export default {
   name: 'App',
-}
+  components: {
+    CryptoTable,
+  },
+};
 </script>
