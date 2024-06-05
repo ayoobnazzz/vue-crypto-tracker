@@ -10,8 +10,14 @@
             :headers="headers"
             :items="cryptocurrencies"
             class="elevation-1"
+            item-value="id"
             @click:row="goToDetail"
           >
+            <template v-slot:item.name="{ item }">
+              <span @click.stop="goToDetail(item)" style="cursor: pointer; color: blue;">
+                {{ item.name }}
+              </span>
+            </template>
             <template v-slot:item.price="{ item }">
               \${{ item.current_price.toFixed(2) }}
             </template>
@@ -42,16 +48,23 @@
       ]
   
       const fetchCryptocurrencies = async () => {
-        try {
-          cryptocurrencies.value = await getCryptocurrencies()
-        } catch (error) {
-          console.error('Error fetching cryptocurrencies:', error)
-        }
-      }
+  try {
+    cryptocurrencies.value = await getCryptocurrencies()
+    console.log('Cryptocurrencies:', cryptocurrencies.value)
+  } catch (error) {
+    console.error('Error fetching cryptocurrencies:', error)
+  }
+}
+
   
-      const goToDetail = (item) => {
-        router.push({ name: 'CryptoDetail', params: { id: item.id } })
-      }
+const goToDetail = (item) => {
+  console.log('Clicked item:', item)
+  if (item && item.id) {
+    router.push({ name: 'CryptoDetail', params: { id: item.id } })
+  } else {
+    console.error('Invalid item:', item)
+  }
+}
   
       onMounted(() => {
         fetchCryptocurrencies()

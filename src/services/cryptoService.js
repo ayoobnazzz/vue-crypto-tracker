@@ -1,6 +1,7 @@
-import axios from 'axios';
+// src/services/cryptoService.js
+import axios from 'axios'
 
-const API_URL = 'https://api.coingecko.com/api/v3';
+const API_URL = '/api'
 
 export const getCryptocurrencies = async () => {
   try {
@@ -12,10 +13,25 @@ export const getCryptocurrencies = async () => {
         page: 1,
         sparkline: false,
       },
-    });
-    return response.data;
+    })
+    return response.data
   } catch (error) {
-    console.error('Error fetching cryptocurrencies:', error);
-    throw error;
+    console.error('Error fetching cryptocurrencies:', error)
+    throw error
   }
-};
+}
+
+export const getCryptoHistory = async (id) => {
+  try {
+    const response = await axios.get(`${API_URL}/coins/${id}/market_chart`, {
+      params: {
+        vs_currency: 'usd',
+        days: '30', // last 30 days
+      },
+    })
+    return response.data.prices
+  } catch (error) {
+    console.error('Error fetching cryptocurrency history:', error)
+    throw error
+  }
+}

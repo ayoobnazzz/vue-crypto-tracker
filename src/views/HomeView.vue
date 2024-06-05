@@ -1,3 +1,4 @@
+<!-- src/views/HomeView.vue -->
 <template>
   <v-container>
     <CryptoTable />
@@ -8,7 +9,7 @@
 import CryptoTable from '../components/CryptoTable.vue'
 
 export default {
-  name: 'Home',
+  name: 'HomeView',
   components: {
     CryptoTable,
   },
