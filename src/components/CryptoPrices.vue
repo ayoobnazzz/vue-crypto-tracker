@@ -30,55 +30,69 @@
   </template>
   
   <script>
+  import { ref } from 'vue';
+  import { useRouter } from 'vue-router';
   import axios from 'axios';
   
   export default {
-    data() {
-      return {
-        cryptocurrencies: [],
-        loading: false,
-        error: null,
-        page: 1
-      };
-    },
-    methods: {
-      async fetchCryptoData() {
-        this.loading = true;
+    name: 'CryptoPrices',
+    setup() {
+      const cryptocurrencies = ref([]);
+      const loading = ref(false);
+      const error = ref(null);
+      const page = ref(1);
+      const router = useRouter();
+  
+      const fetchCryptoData = async () => {
+        loading.value = true;
         try {
           const response = await axios.get('https://api.coingecko.com/api/v3/coins/markets', {
             params: {
               vs_currency: 'usd',
               order: 'market_cap_desc',
               per_page: 10,
-              page: this.page,
+              page: page.value,
               sparkline: false
             }
           });
-          this.cryptocurrencies = response.data;
-          this.error = null;
-        } catch (error) {
-          this.error = 'Error fetching cryptocurrency data.';
-          console.error('Error fetching cryptocurrency data:', error);
+          cryptocurrencies.value = response.data;
+          error.value = null;
+        } catch (err) {
+          error.value = 'Error fetching cryptocurrency data.';
+          console.error('Error fetching cryptocurrency data:', err);
         } finally {
-          this.loading = false;
+          loading.value = false;
         }
-      },
-      goToDetail(id) {
-        this.$router.push({ name: 'Detail', params: { id } });
-      },
-      nextPage() {
-        this.page++;
-        this.fetchCryptoData();
-      },
-      prevPage() {
-        if (this.page > 1) {
-          this.page--;
-          this.fetchCryptoData();
+      };
+  
+      const goToDetail = (id) => {
+        router.push({ name: 'CryptoDetail', params: { id } });
+      };
+  
+      const nextPage = () => {
+        page.value++;
+        fetchCryptoData();
+      };
+  
+      const prevPage = () => {
+        if (page.value > 1) {
+          page.value--;
+          fetchCryptoData();
         }
-      }
-    },
-    created() {
-      this.fetchCryptoData();
+      };
+  
+      fetchCryptoData();
+  
+      return {
+        cryptocurrencies,
+        loading,
+        error,
+        page,
+        fetchCryptoData,
+        goToDetail,
+        nextPage,
+        prevPage
+      };
     }
   };
   </script>

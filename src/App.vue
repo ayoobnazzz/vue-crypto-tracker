@@ -1,11 +1,23 @@
 <template>
   <div id="app">
+    <Header />
     <router-view />
   </div>
 </template>
 
 <script>
+import Header from './components/Header.vue';
+import useAuth from './store/auth';
+
 export default {
+  name: 'App',
+  components: {
+    Header
+  },
+  setup() {
+    const { user } = useAuth();
+    return { user };
+  }
 };
 </script>
 
